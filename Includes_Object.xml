@@ -1031,6 +1031,7 @@
         <param name="top250_prop" default="Window(Home).Property(SkinHelper.ListItem.IMDB.Top250)" />
         <param name="imdb_listitem" default="ListItem.Rating(imdb)" />
         <param name="tmdb_listitem" default="ListItem.Rating(themoviedb)" />
+        <param name="tvdb_listitem" default="ListItem.Rating(tvdb)" />
         <definition>
             <control type="grouplist">
                 <orientation>horizontal</orientation>
@@ -1100,18 +1101,7 @@
                         <height>28</height>
                         <align>center</align>
                         <font>font_tiny_bold</font>
-                        <label>$INFO[$PARAM[tmdb_listitem]]</label>
-                        <visible>!String.IsEmpty($PARAM[tmdb_listitem])</visible>
-                    </control>
-                    <control type="label">
-                        <textcolor>main_fg_70</textcolor>
-                        <top>40</top>
-                        <width>auto</width>
-                        <height>28</height>
-                        <align>center</align>
-                        <font>font_tiny_bold</font>
-                        <label>$INFO[$PARAM[tmdb_prop]]</label>
-                        <visible>String.IsEmpty($PARAM[tmdb_listitem]) + !String.IsEmpty($PARAM[tmdb_prop])</visible>
+                        <label>$VAR[tmdb_prop]</label>
                     </control>
                 </control>
                 <control type="group">
@@ -1165,24 +1155,13 @@
                         <height>28</height>
                         <align>center</align>
                         <font>font_tiny_bold</font>
-                        <label>$INFO[$PARAM[imdb_listitem]]</label>
-                        <visible>!String.IsEmpty($PARAM[imdb_listitem])</visible>
-                    </control>
-                    <control type="label">
-                        <textcolor>main_fg_70</textcolor>
-                        <top>40</top>
-                        <width>auto</width>
-                        <height>28</height>
-                        <align>center</align>
-                        <font>font_tiny_bold</font>
-                        <label>$INFO[$PARAM[imdb_prop]]</label>
-                        <visible>String.IsEmpty($PARAM[imdb_listitem]) + !String.IsEmpty($PARAM[imdb_prop])</visible>
+                        <label>$VAR[imdb_prop]</label>
                     </control>
                 </control>
                 <control type="group">
                     <width>64</width>
                     <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
-                    <visible>!String.IsEmpty($PARAM[tvdb_prop])</visible>
+                    <visible>!String.IsEmpty($PARAM[tvdb_listitem]) | !String.IsEmpty($PARAM[tvdb_prop])</visible>
                     <visible>!Skin.HasSetting(Ratings.TVDB)</visible>
                     <control type="image">
                         <top>0</top>
@@ -1198,7 +1177,7 @@
                         <height>28</height>
                         <align>center</align>
                         <font>font_tiny_bold</font>
-                        <label>$INFO[$PARAM[tvdb_prop]]</label>
+                        <label>$VAR[tvdb_prop]</label>
                     </control>
                 </control>
                 <control type="group">
@@ -1296,6 +1275,20 @@
             </control>
         </definition>
     </include>
+
+    <!-- Use ListItem.Rating(rating) if available  -->
+    <variable name="imdb_prop">
+        <value condition="!String.IsEmpty(ListItem.Rating(imdb))">$INFO[ListItem.Rating(imdb)]</value>
+        <value>$INFO[Window(home).Property(SkinHelper.ListItem.Rating.IMDB)]</value>
+    </variable>
+    <variable name="tmdb_prop">
+        <value condition="!String.IsEmpty(ListItem.Rating(themoviedb))">$INFO[ListItem.Rating(themoviedb)]</value>
+        <value>$INFO[Window(Home).Property(SkinHelper.ListItem.Rating.TMDB)]</value>
+    </variable>
+    <variable name="tvdb_prop">
+        <value condition="!String.IsEmpty(ListItem.Rating(tvdb))">$INFO[ListItem.Rating(tvdb)]</value>
+        <value>$INFO[Window(Home).Property(SkinHelper.ListItem.Rating.TVDB)]</value>
+    </variable>
 
     <include name="Object_Info_TextPairs">
         <param name="haspath" default="false" />
