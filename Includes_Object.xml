@@ -1032,6 +1032,7 @@
         <param name="imdb_listitem" default="ListItem.Rating(imdb)" />
         <param name="tmdb_listitem" default="ListItem.Rating(themoviedb)" />
         <param name="tvdb_listitem" default="ListItem.Rating(tvdb)" />
+        <param name="default_listitem" default="ListItem.Rating" />
         <definition>
             <control type="grouplist">
                 <orientation>horizontal</orientation>
@@ -1139,7 +1140,7 @@
                 <control type="group">
                     <width>84</width>
                     <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,movie)</visible>
-                    <visible>!String.IsEmpty($PARAM[imdb_listitem]) | !String.IsEmpty($PARAM[imdb_prop]</visible>
+                    <visible>!String.IsEmpty($PARAM[imdb_listitem]) | !String.IsEmpty($PARAM[imdb_prop] | [String.IsEmpty(ListItem.Rating(themoviedb)) + !String.IsEmpty($PARAM[default_listitem]]</visible>
                     <visible>!Skin.HasSetting(Ratings.IMDB)</visible>
                     <control type="image">
                         <top>0</top>
@@ -1161,7 +1162,7 @@
                 <control type="group">
                     <width>64</width>
                     <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
-                    <visible>!String.IsEmpty($PARAM[tvdb_listitem]) | !String.IsEmpty($PARAM[tvdb_prop])</visible>
+                    <visible>!String.IsEmpty($PARAM[tvdb_listitem]) | !String.IsEmpty($PARAM[tvdb_prop]) | [String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty($PARAM[default_listitem]]</visible>
                     <visible>!Skin.HasSetting(Ratings.TVDB)</visible>
                     <control type="image">
                         <top>0</top>
@@ -1279,6 +1280,7 @@
     <!-- Use ListItem.Rating(rating) if available  -->
     <variable name="imdb_prop">
         <value condition="!String.IsEmpty(ListItem.Rating(imdb))">$INFO[ListItem.Rating(imdb)]</value>
+        <value condition="String.IsEmpty(ListItem.Rating(themoviedb)) + !String.IsEmpty(ListItem.Rating)">$INFO[ListItem.Rating]</value>
         <value>$INFO[Window(home).Property(SkinHelper.ListItem.Rating.IMDB)]</value>
     </variable>
     <variable name="tmdb_prop">
@@ -1287,6 +1289,7 @@
     </variable>
     <variable name="tvdb_prop">
         <value condition="!String.IsEmpty(ListItem.Rating(tvdb))">$INFO[ListItem.Rating(tvdb)]</value>
+        <value condition="String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty(ListItem.Rating)">$INFO[ListItem.Rating]</value>
         <value>$INFO[Window(Home).Property(SkinHelper.ListItem.Rating.TVDB)]</value>
     </variable>
 
