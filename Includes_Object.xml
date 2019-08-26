@@ -1081,8 +1081,7 @@
                 </control>
                 <control type="group">
                     <width>64</width>
-                    <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,movie)</visible>
-                    <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
+                    <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,movie) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
                     <visible>!String.IsEmpty(ListItem.Rating(themoviedb)) | !String.IsEmpty(ListItem.Rating(tmdb)) | !String.IsEmpty($PARAM[tmdb_prop])</visible>
                     <visible>Skin.HasSetting(Ratings.TheMovieDB)</visible>
                     <control type="image">
