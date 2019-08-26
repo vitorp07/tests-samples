@@ -1082,7 +1082,8 @@
                 <control type="group">
                     <width>64</width>
                     <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,movie)</visible>
-                    <visible>!String.IsEmpty(ListItem.Rating(themoviedb)) | !String.IsEmpty($PARAM[tmdb_prop])</visible>
+                    <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
+                    <visible>!String.IsEmpty(ListItem.Rating(themoviedb)) | !String.IsEmpty(ListItem.Rating(tmdb)) | !String.IsEmpty($PARAM[tmdb_prop])</visible>
                     <visible>Skin.HasSetting(Ratings.TheMovieDB)</visible>
                     <control type="image">
                         <top>0</top>
@@ -1158,7 +1159,7 @@
                 <control type="group">
                     <width>64</width>
                     <visible>String.IsEqual(Container($PARAM[id]).ListItem.DBType,tvshow) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,season) | String.IsEqual(Container($PARAM[id]).ListItem.DBType,episode)</visible>
-                    <visible>!String.IsEmpty(ListItem.Rating(tvdb)) | !String.IsEmpty($PARAM[tvdb_prop]) | [String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty(ListItem.Rating)]</visible>
+                    <visible>!String.IsEmpty(ListItem.Rating(tvdb)) | !String.IsEmpty($PARAM[tvdb_prop]) | [String.IsEmpty(ListItem.Rating(themoviedb)) + String.IsEmpty(ListItem.Rating(tmdb)) + String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty(ListItem.Rating)]</visible>
                     <visible>!Skin.HasSetting(Ratings.TVDB)</visible>
                     <control type="image">
                         <top>0</top>
@@ -1273,7 +1274,9 @@
         </definition>
     </include>
 
-    <!-- Use ListItem.Rating(rating) if available  -->
+    <!-- Try to use ListItem.Rating(rating) first if available -->
+    <!-- Then fallback to ListItem.Rating with imdb icon for movies and tvdb icon for tv shows -->
+    <!-- Finally fallback to SkinHelper if no ListItem.Rating is provided -->
     <variable name="imdb_prop">
         <value condition="!String.IsEmpty(ListItem.Rating(imdb))">$INFO[ListItem.Rating(imdb)]</value>
         <value condition="String.IsEmpty(ListItem.Rating(themoviedb)) + !String.IsEmpty(ListItem.Rating)">$INFO[ListItem.Rating]</value>
@@ -1281,11 +1284,12 @@
     </variable>
     <variable name="tmdb_prop">
         <value condition="!String.IsEmpty(ListItem.Rating(themoviedb))">$INFO[ListItem.Rating(themoviedb)]</value>
+        <value condition="!String.IsEmpty(ListItem.Rating(tmdb))">$INFO[ListItem.Rating(tmdb)]</value>
         <value>$INFO[Window(Home).Property(SkinHelper.ListItem.Rating.TMDB)]</value>
     </variable>
     <variable name="tvdb_prop">
         <value condition="!String.IsEmpty(ListItem.Rating(tvdb))">$INFO[ListItem.Rating(tvdb)]</value>
-        <value condition="String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty(ListItem.Rating)">$INFO[ListItem.Rating]</value>
+        <value condition="String.IsEmpty(ListItem.Rating(themoviedb)) + String.IsEmpty(ListItem.Rating(tmdb)) + String.IsEmpty(ListItem.Rating(imdb)) + !String.IsEmpty(ListItem.Rating)">$INFO[ListItem.Rating]</value>
         <value>$INFO[Window(Home).Property(SkinHelper.ListItem.Rating.TVDB)]</value>
     </variable>
 
